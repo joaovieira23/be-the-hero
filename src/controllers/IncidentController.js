@@ -6,12 +6,18 @@ module.exports = {
 
     const [count] = await connection('incidents').count();
 
-    console.log(count);
-
     const incidents = await connection('incidents')
-    .limit(5)
-    .offset((page - 1) * 5)
-    .select('*');
+      .join('ongs', 'ongs.id', '=', 'incidents.ong_id') 
+      .limit(5)
+      .offset((page - 1) * 5)
+      .select([
+        'incidents.*',
+        'ongs.name', 
+        'ongs.email', 
+        'ongs.whatsapp', 
+        'ongs.city', 
+        'ongs.uf'
+      ]);
 
     res.header('X-Total-Count', count['count(*)']);
 
